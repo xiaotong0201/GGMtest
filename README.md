@@ -1,5 +1,5 @@
 # CSS-GGM
-Reference Paper: 
+Reference Paper:   
 Xiaotong Lin, Fangqiao Tian and Dongming Huang. Hypothesis
 Testing in Gaussian Graphical Models: Novel Goodness-of-Fit Tests
 and Conditional Randomization Tests. 4 december 2023. DOI:
