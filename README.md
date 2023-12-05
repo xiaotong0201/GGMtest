@@ -1,5 +1,5 @@
 # Hypothesis Testing in Gaussian Graphical Models
-This repository contains source code for conducting hypothesis testing in Gaussian graphical models, including a Monte Carlo goodness-of-fit (MC-GoF) test and graphical conditional randomization test (G-CRT)  [paper on [arXiv](https://arxiv.org/abs/2312.01815)]. Rendered tutorials demonstrating the usage of the code are available on [].
+This repository contains source code for conducting hypothesis testing in Gaussian graphical models, including a Monte Carlo goodness-of-fit (MC-GoF) test and graphical conditional randomization test (G-CRT)  [paper on [arXiv](https://arxiv.org/abs/2312.01815)]. Tutorials demonstrating the usage of the code are available on [].
 
 - Folder `GGM-Test-Version0`: R code for two tests (MC-GoF and G-CRT)
   - `CSS-GGM.R`：
