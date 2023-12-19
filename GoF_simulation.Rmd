@@ -1,0 +1,150 @@
+---
+title: "GoF_simulation"
+output: html_document
+date: "2023-12-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+## Goodness-of-fit testing simulation
+
+On this page,we take an example to evaluate the statistical power and demonstrate the theoretically valid Type-I error control of our proposed MC-GoF testing procedure for GGMs with numerical comparisons to established methods (Section 5.1 of the accompanying paper). Throughout this section, we utilize four test statistic functions (PRC, ERC, F$_{\Sigma}$, GLR-$\ell_1$) and take $M^{1}P_{1}$ and Bonf as baseline methods. Additionally, we fix the procedure parameters $M=100$ and $L=3$ for conducting Algorithm 2.
+
+```{r}
+library(Matrix)
+library(MASS)
+library(mvtnorm)
+library(glasso)
+library(Rfast)
+library(glmnet)
+library(rags2ridges)
+library(dplyr)
+library(purrr)
+source("CSS-GGM.R")
+source("GoF-Statistics.R")
+source("GGMTesting.R")
+source("GoF-OneExp.R")
+source("PostAnalysis.R")
+source("GoF-Settings.R")
+source("GOF_function_for_webpage.R")
+```
+
+### Type I error control
+
+Take band graph $(K,K_0,p,s,n)=(6,6,20, 0.2, 80)$ for example
+
+```{r}
+# Parameters
+param_Band_template <- list(
+  model = "Band_Band",
+  N = 80,
+  P = 20,
+  modelParam = list(
+    K0 = 6,
+    K = 6,
+    s = 0.2
+  )
+)
+M = 100
+L = 3
+
+```
+
+Repeat experiments 10 times
+
+```{r}
+FlagLocalTest=F
+PlatForm=(Sys.info())["sysname"]
+if(FlagLocalTest&(PlatForm!="Windows")){Rprof("my_profile.out")}
+
+path_prefix=paste0('Experiments-type_I_error','/')
+if(!dir.exists(path_prefix)){
+  dir.create(path_prefix)
+}
+
+# Repeat experiment and save results
+for (epo in 1:10){
+  output = run_experiments_epo_webpage(param_Band_template,epo, M,L,List_CSS_stat =NULL ,dir_prefix=path_prefix)
+  save(output,param_Band_template,file=paste0(path_prefix,epo,'.RData'))
+}
+
+# Load results
+all_output=list()
+for(epo in 1:10){
+  load(file=paste0('Experiments-type_I_error','/',epo,'.RData'))
+  all_output[[epo]]=list(output[[1]]$p_value)
+}
+```
+
+We calculate the rejection proportions and conduct the one-sample proportion test for the hypothesis that the rejection probability is no greater than $\alpha = 0.05$
+
+```{r}
+summ=read_experiments_epo(param_Band_template,all_output)
+#Rejection proportion
+rej.table=extract_metric(metric_name='power')[c("n","p","K0","K","s","VV","DP","PRC_SS", "ERC_Z_SS", "F_sum", "glr_glasso")]
+#One-sided p-value of the one-sample proportion test
+ospt.table=extract_metric(metric_name='ospt')[c("n","p","K0","K","s","VV","DP","PRC_SS", "ERC_Z_SS", "F_sum", "glr_glasso")]
+
+table1 = rbind(rej.table,ospt.table)
+rownames(table1) = c("rej.pro","ospt")
+colnames(table1) = c("n","p","K0","K","s","VV","DP","PRC","ERC","F_sum","GLR_l1")
+print(table1)
+```
+
+### Power comparison
+
+Take band graph $(K,K_0,p,s,n)=(6,1,20, 0.2, 40)$ for example
+
+```{r}
+param_Band_template <- list(
+  model = "Band_Band",
+  N = 40,
+  P = 20,
+  modelParam = list(
+    K0 = 1,
+    K = 6,
+    s = 0.1
+  )
+)
+M = 100
+L = 3
+```
+
+Repeat experiments 10 times
+
+```{r}
+path_prefix=paste0('Experiments-power-band','/')
+if(!dir.exists(path_prefix)){
+  dir.create(path_prefix)
+}
+
+# Repeat experiment and save results
+for (epo in 1:10){
+  output = run_experiments_epo_webpage(param_Band_template,epo, M,L,List_CSS_stat =NULL ,dir_prefix=path_prefix)
+  save(output,param_Band_template,file=paste0(path_prefix,epo,'.RData'))
+}
+
+# Load results
+all_output=list()
+for(epo in 1:10){
+  load(file=paste0('Experiments-power-band','/',epo,'.RData'))
+  all_output[[epo]]=list(output[[1]]$p_value)
+}
+```
+
+Calculate the power and standard error
+
+```{r}
+summ=read_experiments_epo(param_Band_template,all_output)
+#Power
+power.table=extract_metric(metric_name='power')[c("n","p","K0","K","s","VV","DP","PRC_SS", "ERC_Z_SS", "F_sum", "glr_glasso")]
+#Standard error
+SE.table=extract_metric(metric_name='SE')[c("n","p","K0","K","s","VV","DP","PRC_SS", "ERC_Z_SS", "F_sum", "glr_glasso")]
+
+table2 = rbind(power.table,SE.table)
+rownames(table2) = c("power","std_error")
+colnames(table2) = c("n","p","K0","K","s","VV","DP","PRC","ERC","F_sum","GLR_lasso")
+print(table2)
+```

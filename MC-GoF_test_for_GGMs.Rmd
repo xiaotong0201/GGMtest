@@ -1,0 +1,96 @@
+---
+title: "MC-GoF test for GGMs"
+output: html_document
+date: "2023-12-11"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+## Goodness-of-fit testing
+
+This page provides a step-by-step guide on how to conduct the Monte Carlo goodness-of-fit (MC-GoF) test for GGMs ( Algorithm 3 in the accompanying paper).
+
+```{r}
+library(Matrix)
+library(MASS)
+library(mvtnorm)
+library(glasso)
+library(Rfast)
+library(glmnet)
+library(rags2ridges)
+library(dplyr)
+library(purrr)
+source("CSS-GGM.R")
+source("GoF-Statistics.R")
+source("GGMTesting.R")
+source("GoF-OneExp.R")
+source("PostAnalysis.R")
+source("GoF-Settings.R")
+source("GOF_function_for_webpage.R")
+```
+
+### Looking inside the GGM function
+
+We generate random samples X from the band graph with $(K,K_0,p,s,n)=(6,6,20, 0.2, 80)$ 
+
+```{r}
+# band graph parameters
+n = 80      # number of observations
+p = 20      # number of dimensions
+s = 0.2     # signal magnitude
+K = 6       # bandwidth of true graph
+K0 = 6      # bandwidth of null graph
+
+# setting up the true graph and null graph
+true_graph=graph_band(p,K,s)
+null_graph=graph_band(p,K0,s) 
+
+sigma=true_graph$sigma
+inv.sigma=true_graph$inv.sigma
+G0=prec_to_adj(null_graph$inv.sigma)
+
+# Simulate the data x
+X <- simulate_data(sigma, n)
+```
+
+Sampling M exchangeable copies of X, L is the number of iterations in each Markov chain (Algorithm 2)
+
+```{r}
+CSS_sample = exchangeable_sampling(X, G0, M=100, L=3)
+X_copies  = CSS_sample$X_copies
+```
+
+Choosing test statistic functions: PRC and ERC discussed in Section 3.2.1, F$_{\Sigma}$ in Section 3.2.2, GLR-$\ell_1$ in Section 3.2.3.
+
+```{r}
+# statistics
+List_CSS_stat = c( "PRC_SS", "ERC_Z_SS", "F_sum", "glr_glasso")
+
+```
+
+Monte Carlo goodness-of-fit(MC-GoF) test for GGMs (Algorithm 3)
+
+```{r}
+test_result = GoF_test_webpage(X, X_copies, G0, List_CSS_stat)
+```
+
+Output the p-value $\mathrm{pVal}_T$ of our method and take VV and DP as baselines.
+
+```{r}
+VV_pvalue = VV_GoF(X,G0)
+DP_pvalue <- Bonf_GoF(X,G0)
+print(list("VV_pvalue" = VV_pvalue,
+           "DP_pvalue" = DP_pvalue))
+print(test_result$p_values)
+```
+
+Take statistic function PRC for example, show $T(X), T(\tilde{X}^{(1)}), T(\tilde{X}^{(2)}), \cdots, T(\tilde{X}^{(M)})$
+
+```{r}
+hist(test_result$Ttildes$PRC_SS,xlab = "PRC_Ttilde",main="Histogram of PRC_Ttilde")
+abline(v=test_result$T0s["PRC_SS"],col="red")
+text(test_result$T0s["PRC_SS"], 0,labels = "T0", pos = 3, col = "red")
+```

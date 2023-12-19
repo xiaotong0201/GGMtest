@@ -1,0 +1,103 @@
+---
+title: "Graphical_conditional_randomization_test"
+output: html_document
+date: "2023-12-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+## Conditional independence testing
+
+This page provides a step-by-step guide on how to conduct the Graphical conditional randomization test (G-CRT) ( Algorithm 4 in the accompanying paper). Our methodology is based on a combination of the conditional randomization test [CRT](https://academic.oup.com/jrsssb/article/80/3/551/7048447) and our algorithm for generating exchangeable copies in Section 2.
+
+```{r}
+library(glmnet)
+library(rags2ridges)
+library(glasso)
+library(Matrix)
+library(MASS)
+library(mvtnorm)
+library(reshape)
+library(ggplot2)
+source("CRT-Simulate.R")
+source("CRT-Stat.R")
+source("DBL_GLMs_functions.R")
+source("OneExp.R")
+source("Run-Testing.R")
+source("dCRT_function.R")
+source("GoF-Settings.R")
+source("CSS-GGM.R")
+source("GGMTesting.R")
+source("CIT_function_for_webpage.R")
+```
+
+### Looking into the CRT function
+
+Take the Gaussian linear regression for example
+
+```{r}
+setting = "l_l_w"             # gaussian linear regression (low-dimensional setting)
+n = c(50)             
+p = c(20)
+setT=1:8
+
+K = 6
+s = 0.2
+grid_signal= seq(0,2.5,by=0.25)   # control signal strength
+
+# get graph G
+true_graph=graph_band(p,K,s)
+perm.var=sample(p,p)
+sigma=true_graph$sigma[perm.var,perm.var]
+inv.sigma=true_graph$inv.sigma[perm.var,perm.var]
+diag_s=sqrt(diag(sigma))
+sigma=sweep(sweep(sigma,1,1/diag_s,"*"),2,1/diag_s, "*")
+inv.sigma=sweep(sweep(inv.sigma,1,diag_s,"*"),2,diag_s, "*")
+G = prec_to_adj(inv.sigma)       # graph G
+
+# Simulate the data X
+X <- simulate_data(sigma, n)
+beta=random_beta(p)              # regression coefficient
+noise_unif=runif(n)
+```
+
+Sampling M exchangeable copies of X, L is the number of iterations in each Markov chain (Algorithm 2)
+
+```{r}
+CSS_sample = exchangeable_sampling(X, G, I = setT, bReduced = T, M=100, L=3)
+X_copies  = CSS_sample$X_copies
+```
+
+We choose statistics LM-SST and LM-SSR by comparison to the classical F-test for the null hypothesis $H_0: \beta_{\mathcal{T}}=0$ and the dCRT using a Gaussian Lasso model (Bonferroni adjusted). 
+
+```{r}
+# statistics
+List_Stat_Comb=c("Stat_Comb_Linear_SST","Stat_Comb_Linear_Dev")
+```
+
+CRT test (Algorithm 4)
+
+```{r}
+test_result = GRT_test_webpage(X, CSS_sample, setting, setT, beta, niose_unif, grid_signal, List_Stat_Comb,IncludeBaseline = T)
+```
+
+Output the p-value
+
+```{r}
+for(ind.signal in 1:length(grid_signal)){
+  print(paste("theta=",test_result[[ind.signal]]$theta))
+  output_pvalue = test_result[[ind.signal]]$pvalues[-which(names(test_result[[ind.signal]]$pvalues)=="dCRT_RF")]
+  names(output_pvalue) = c("LM-SST","LM-SSR","F-test","dCRT")
+  print(output_pvalue)
+}
+```
+
+Take theta = 0, statistics: LM-SST for example, show $T(Y, X), T(Y, \tilde{X}^{(1)}),  \cdots, T(Y, \tilde{X}^{(M)})$
+
+```{r}
+hist(test_result$`theta= 0`$Ttildes$Stat_Comb_Linear_SST,xlab = "LM-SST_Ttilde",main="Histogram of LM-SST_Ttilde")
+abline(v=test_result$`theta= 0`$T0s$Stat_Comb_Linear_SST,col="red")
+text(test_result$`theta= 0`$T0s$Stat_Comb_Linear_SST, 0,labels = "T0", pos = 3, col = "red")
+```
