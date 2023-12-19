@@ -1,7 +1,5 @@
-
-
-
-
+## Graphical conditional randomization test (G-CRT)
+## Output the p-values for each statistic at different values of theta.
 
 CRT =function(popul_param,
               CSS_param=list(M=100,L=3),

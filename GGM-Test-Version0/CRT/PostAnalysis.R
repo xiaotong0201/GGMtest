@@ -1,7 +1,3 @@
-### Completed simulation ( 31 Oct 2023) should be found in backup
-### This version (2023-11-04) focus on only a few stat
-
-
 
 # Load necessary libraries
 library(reshape)
@@ -14,8 +10,6 @@ ind.experiment = 5
 
 # Loop over experiments
 for (ind.experiment in 1:8) {
-  
-  
   
   if(ind.experiment==4|ind.experiment==8){
     Max.epo=800

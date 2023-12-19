@@ -1,4 +1,4 @@
-
+## The selection of statistic functions in different settings.
 
 MethodSelection = function(setting) {
   return(switch(
@@ -26,7 +26,6 @@ MethodSelection = function(setting) {
     ),
     
     
-    
     'l_l_m' =  list(
       ind = c(1,2,3 ,4, 6)  ,
       names = c('RF', 'RF-D' ,'RF-RR',  'F-test', 'dCRT (RF)'),
@@ -37,9 +36,6 @@ MethodSelection = function(setting) {
       names = c('RF', 'RF-D' ,'RF-RR', 'De-Lasso', 'dCRT (RF)'),
       theta_lim = c(0, 7) 
     ), 
-    
-    
-    
     
     
     'l_gl_m' =  list(

@@ -5,6 +5,8 @@ simulate_data <- function(Sigma, n) {
   return(X)
 }
 
+## Function to conduct GoF test 
+#return the p-values obtained from both the specified test statistics and the baseline methods.
 
 GGM =function(popul_param,
               CSS_param=list(M=100,L=3),

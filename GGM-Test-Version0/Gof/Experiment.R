@@ -67,6 +67,7 @@ param_ER_template <- list(model = "ER",
 )
 
 
+# Function to run one GoF test experiment.
 run_experiments_epo <- function(param_template, epo, M,L,List_CSS_stat=NULL,
                                 dir_prefix='') {
   final_results <- list()
@@ -157,6 +158,7 @@ save(PlatForm,file=paste0(path_prefix,epo,'.RData'))
 output = run_experiments_epo(param_template,epo, M,L,dir_prefix=path_prefix)
 print(output)
 
+# Save the result for one epoch.
 save(output,param_template,
      file=paste0(path_prefix,epo,'.RData'))
 

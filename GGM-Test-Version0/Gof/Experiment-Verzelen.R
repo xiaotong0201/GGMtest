@@ -25,6 +25,7 @@ param_VV_template <- list(model = "Verzelen",
 )
 
 
+## By setting the value of 'epo,' return the specific GoF test results for each epoch value.
 run_experiments_epo <- function(param_template, epo, M,L,List_CSS_stat=NULL,
                                 dir_prefix='',file) {
   final_results <- list()

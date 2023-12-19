@@ -89,21 +89,6 @@ df_display=subset(df_display,Method%in%selected_methods)
 df_display$Method=factor(df_display$Method,levels=selected_methods)
 
 
-# ## highlight the combined 
-# df_display$Display <- sprintf("%.3f (%s)", 
-#                               df_display$Power, 
-#                               sub("^0", "", sprintf("%.3f",df_display$SE))
-#                               )
-# df_display <- df_display %>% 
-#   group_by(across(1:num_factors)) %>% 
-#   mutate(Is_Max = ifelse(Power == max(Power), TRUE, FALSE)) %>%
-#   ungroup()
-# ## highlight the combined 
-# df_display$Display <- ifelse(df_display$Is_Max, 
-#                              paste0("\\textbf{", df_display$Display, "}"), 
-#                              df_display$Display)
-
-
 if(ind.experiment!=0){
 df_display <- df_display %>% 
   group_by(across(1:num_factors)) %>% 
@@ -125,14 +110,6 @@ df_display$Display <- sprintf("%s (%s)",
                                  sprintf("%.3f",df_display$SE)
                                 )
 }
-
-
-           
-
-# ## highlight the combined 
-# df_display$Display <- ifelse(df_display$Is_Max, 
-#                              paste0("\\textbf{", df_display$Display, "}"), 
-#                              df_display$Display)
 
 
 
@@ -162,7 +139,6 @@ rowLabels(tab)<-rlt
 
 clt=colLabels(tab)
 clt  = clt[1:2,]
-# clt[2,]=c('VV','DP','PRC$_{\\mbox{SS}}$','ERC$_{Z}$', 'F$_{\\Sigma}$',"GLR$_{\\ell 1}$" )
 
 clt[2,]=c('VV','DP','PRC','ERC', 'F$_{\\Sigma}$',"GLR-${\\ell_1}$" )
 colLabels(tab)<-clt

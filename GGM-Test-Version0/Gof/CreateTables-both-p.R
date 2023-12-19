@@ -5,14 +5,8 @@ source("~/Library/CloudStorage/GoogleDrive-statdongminghuang@gmail.com/My Drive/
 
 ind.experiment=3
 
-
-
-
-
 const.K=6
 # const.K=2
-
-
 
 for(ind.experiment in 0:3){
   

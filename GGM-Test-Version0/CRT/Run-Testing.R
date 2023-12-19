@@ -1,9 +1,10 @@
 
 source('CRT-Stat.R')
 
+## Setting the test statistics for each model
 
-# Linear ----
-# good, powerful
+# Linear regression----
+
 Stat_Comb_Linear_Dev=list(Fun_Stat = Dev_GLM, model_type="gaussian", 
                        Stat_Procedure = "Direct")  
 
@@ -12,8 +13,8 @@ Stat_Comb_Linear_SST=list(Fun_Stat = SST_GLM, model_type="gaussian",
 
 
 List_Stat_Comb_Linear=c(
-  'Stat_Comb_Linear_SST'    
-  ,'Stat_Comb_Linear_Dev'   
+  'Stat_Comb_Linear_SST'    ## LM-SST
+  ,'Stat_Comb_Linear_Dev'   ## LM-SSR
 )
 
 
@@ -26,8 +27,8 @@ Stat_Comb_Lasso_Res_Linear_Dev=list(Fun_Stat = Dev_GLM, model_type="gaussian",
 
 
 List_Stat_Comb_Linear_HD=c(
-  'Stat_Comb_Lasso_Res_Linear_SST',  
-  "Stat_Comb_Lasso_Res_Linear_Dev"
+  'Stat_Comb_Lasso_Res_Linear_SST',  ## LM-L1-R-SST
+  "Stat_Comb_Lasso_Res_Linear_Dev"   ## LM-L1-R-SSR
 )  
 
 
@@ -52,9 +53,9 @@ Stat_Comb_RF_R_Distill_RF=list(Fun_Stat = RF, model_type="regression",
 
 
 List_Stat_Comb_Nonlinear=c(
-  'Stat_Comb_RF_R_IS',   
-  "Stat_Comb_RF_R_Distill_RF",       
-  "Stat_Comb_RF_R_Res_RF"
+  'Stat_Comb_RF_R_IS',           ## RF
+  "Stat_Comb_RF_R_Distill_RF",   ## RF-RR    
+  "Stat_Comb_RF_R_Res_RF"        ## RF-D
 )  
 
 
@@ -90,31 +91,30 @@ Stat_Comb_RF_C_Distill_RF=list(Fun_Stat = RF, model_type="classification",
 
 
 List_Stat_Comb_Logistic=c(
-  'Stat_Comb_Logistic_Dev',      
-
-  'Stat_Comb_RF_C_IS'
+  'Stat_Comb_Logistic_Dev',    ## GLM-DEV     
+  'Stat_Comb_RF_C_IS'          ## RF 
  
 ) 
 
 List_Stat_Comb_Logistic_HD=c(
-  "Stat_Comb_Logistic_Distill_Dev" ,
-  'Stat_Comb_Sel_Logistic_SST'    
-  , 'Stat_Comb_RF_C_IS'          
+  "Stat_Comb_Logistic_Distill_Dev" ,   ## GLM-L1-D
+  'Stat_Comb_Sel_Logistic_SST'         ## GLM-L1-R-SST
+  , 'Stat_Comb_RF_C_IS'                ## RF
  
 ) 
 
 # Non-GLM classification  ----
 
 List_Stat_Comb_Binary=c(
-  'Stat_Comb_RF_C_IS',     
-  'Stat_Comb_RF_C_Distill_RF',
-  'Stat_Comb_RF_R_Res_RF', 
+  'Stat_Comb_RF_C_IS',                ## RF
+  'Stat_Comb_RF_C_Distill_RF',        ## RF-D
+  'Stat_Comb_RF_R_Res_RF',            ## RF-RR
   )
 
 List_Stat_Comb_Binary_HD=c(  
-  'Stat_Comb_RF_C_IS',        
-  'Stat_Comb_RF_C_Distill_RF',
-  'Stat_Comb_RF_R_Res_RF',    
+  'Stat_Comb_RF_C_IS',                ## RF
+  'Stat_Comb_RF_C_Distill_RF',        ## RF-D
+  'Stat_Comb_RF_R_Res_RF',            ## RF-RR
 ) 
 
 
@@ -164,7 +164,8 @@ CSS_test_result=list()
   
   cat('CSS testing end;\n')
 
-  
+## Setting the baseline methods for each model
+
 # Baseline methods ----
 
   if(IncludeBaseline==T){  # avoid running at this point
@@ -192,7 +193,7 @@ run_and_time <- function(expr, x, y, setT) {
 
 
 
-Run_baseline_test=function(x,y,setT ,setting){# Function to record the execution time and result of a function call
+Run_baseline_test=function(x,y,setT ,setting){
   
   
   # Store the function calls and their associated model types

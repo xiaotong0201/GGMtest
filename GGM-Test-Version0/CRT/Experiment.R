@@ -16,7 +16,7 @@ source('Run-Testing.R')
 
 source('OneExp.R')
 
-## Low dimension----
+## gaussian linear regression (low-dimensional setting)
 popul_param_llw <- list(
   setting = "l_l_w",
   N = c(50),
@@ -29,6 +29,7 @@ popul_param_llw <- list(
   )
 )
 
+## gaussian linear regression (high-dimensional setting)
 popul_param_hlw <- list(
   setting = "h_l_w",
   N = c(80),
@@ -41,6 +42,7 @@ popul_param_hlw <- list(
   )
 )
 
+## logistic regression (low-dimensional setting)
 popul_param_lgw <- list(
   setting = "l_gl_w",
   N = c(50),
@@ -53,7 +55,7 @@ popul_param_lgw <- list(
   )
 )
 
-
+## logistic regression (high-dimensional setting)
 popul_param_hgw <- list(
   setting = "h_gl_w",
   N = c(80),
@@ -66,8 +68,7 @@ popul_param_hgw <- list(
   )
 )
 
-
-
+## nonlinear regression (low-dimensional setting)
 popul_param_llm <- list(
   setting = "l_l_m",
   N = c(50),
@@ -81,7 +82,7 @@ popul_param_llm <- list(
 )
 
 
-
+## nonlinear regression (high-dimensional setting)
 popul_param_hlm <- list(
   setting = "h_l_m",
   N = c(80),
@@ -95,7 +96,7 @@ popul_param_hlm <- list(
 )
 
 
-
+## nonlinear binary regression (low-dimensional setting)
 popul_param_lgm <- list(
   setting = "l_gl_m",
   N = c(50),
@@ -108,6 +109,7 @@ popul_param_lgm <- list(
   )
 )
 
+## nonlinear binary regression (high-dimensional setting)
 popul_param_hgm <- list(
   setting = "h_gl_m",
   N = c(80),
