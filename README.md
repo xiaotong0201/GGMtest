@@ -11,17 +11,15 @@ This repository contains source code for conducting hypothesis testing in Gaussi
     - `Stock`: Dependence of fund return
     - `Breast`: Breast cancer relapse
 
-Rendered tutorials demonstrating the usage of the code are available at the [page]. The corresponding R markdown files are as follows:
+Rendered tutorials demonstrating the usage of the code are available at the [page]. 
 
-- `MC-GoF_test_for_GGMs.Rmd`: Key steps involved in MC-GoF[]
-- `GoF_simulation.Rmd`: MC-GoF simulation example: take band graph for example to evaluate the statistical power and demonstrate the theoretically valid Type I error control of our MC-GoF test with numerical comparisons to established methods.[]
-- `Graphical_conditional_randomization_test.Rmd`: Key steps involved in G-CRT[]
-- `G-CRT_simulation.Rmd`: G-CRT simulation example: take the linear regression model with a low-dimension setting for example to evaluate the statistical power of our proposed G-CRT.[]
-
-The R code used in the webpage tutorials:
-
-- `CIT_function_for_webpage.R`: Utility functions for MC-GoF tutorials
-- `GOF_function_for_webpage.R`: Utility functions for G-CRT tutorials
+- Folder `Tutorials`: The corresponding R code used in the webpage tutorials.
+  - `MC-GoF_test_for_GGMs.Rmd`: Key steps involved in MC-GoF[]
+  - `GoF_simulation.Rmd`: MC-GoF simulation example: take band graph for example to evaluate the statistical power and demonstrate the theoretically valid Type I error control of our MC-GoF test with numerical comparisons to established methods[]
+  - `Graphical_conditional_randomization_test.Rmd`: Key steps involved in G-CRT[]
+  - `G-CRT_simulation.Rmd`: G-CRT simulation example: take the linear regression model with a low-dimension setting for example to evaluate the statistical power of our proposed G-CRT[]
+  - `CIT_function_for_webpage.R`: Utility functions for MC-GoF tutorials
+  - `GOF_function_for_webpage.R`: Utility functions for G-CRT tutorials
 
 ## Goodness-of-Fit Tests 
 
