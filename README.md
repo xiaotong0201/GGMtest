@@ -9,7 +9,7 @@ We sample exchangeable copies to construct goodness-of-fit tests for Gaussian gr
 
 Our methodology is based on a combination of the conditional randomization test (CRT) and our algorithm for generating exchangeable copies. Notably, our method imposes less stringent conditions on the distribution of X among existing CRT methods. We discuss different strategies for constructing test statistic functions and demonstrate in simulations that our approach could be much more powerful than alternatives when the sub-vector of X contains many elements.
 
-
+## Files:
 - Folder `GGM-Test-Version0`: R code for two tests (MC-GoF and G-CRT)
   - `CSS-GGM.R`：Sampling exchangeable copies
   - `GGMTesting.R`：Computing p-value
