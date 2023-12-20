@@ -11,7 +11,7 @@ This repository contains source code for conducting hypothesis testing in Gaussi
     - `Stock`: Dependence of fund return
     - `Breast`: Breast cancer relapse
 
-Rendered tutorials demonstrating the usage of the code are available at the [page]. 
+Rendered tutorials demonstrating the usage of the code are available at: [MC-GoF_test_for_GGMs](https://tfq-acd.github.io/MC-GoF_test_for_GGMs/), [GoF_simulation](https://tfq-acd.github.io/GoFsimulation/), [Graphical_conditional_randomization_test](https://tfq-acd.github.io/CRT/), [G-CRT_simulation](https://tfq-acd.github.io/CRTsimulation/). 
 
 - Folder `Tutorials`: The corresponding R code used in the webpage tutorials.
   - `MC-GoF_test_for_GGMs.Rmd`: Key steps involved in MC-GoF. [here](https://tfq-acd.github.io/MC-GoF_test_for_GGMs/)
