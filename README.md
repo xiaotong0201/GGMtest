@@ -14,10 +14,10 @@ This repository contains source code for conducting hypothesis testing in Gaussi
 Rendered tutorials demonstrating the usage of the code are available at the [page]. 
 
 - Folder `Tutorials`: The corresponding R code used in the webpage tutorials.
-  - `MC-GoF_test_for_GGMs.Rmd`: Key steps involved in MC-GoF[]
-  - `GoF_simulation.Rmd`: MC-GoF simulation example: take band graph for example to evaluate the statistical power and demonstrate the theoretically valid Type I error control of our MC-GoF test with numerical comparisons to established methods[]
-  - `Graphical_conditional_randomization_test.Rmd`: Key steps involved in G-CRT[]
-  - `G-CRT_simulation.Rmd`: G-CRT simulation example: take the linear regression model with a low-dimension setting for example to evaluate the statistical power of our proposed G-CRT[]
+  - `MC-GoF_test_for_GGMs.Rmd`: Key steps involved in MC-GoF. [here](https://tfq-acd.github.io/MC-GoF_test_for_GGMs/)
+  - `GoF_simulation.Rmd`: MC-GoF simulation example: take band graph for example to evaluate the statistical power and demonstrate the theoretically valid Type I error control of our MC-GoF test with numerical comparisons to established methods. [here](https://tfq-acd.github.io/GoFsimulation/)
+  - `Graphical_conditional_randomization_test.Rmd`: Key steps involved in G-CRT. [here](https://tfq-acd.github.io/CRT/)
+  - `G-CRT_simulation.Rmd`: G-CRT simulation example: take the linear regression model with a low-dimension setting for example to evaluate the statistical power of our proposed G-CRT. [here](https://tfq-acd.github.io/CRTsimulation/)
   - `CIT_function_for_webpage.R`: Utility functions for MC-GoF tutorials
   - `GOF_function_for_webpage.R`: Utility functions for G-CRT tutorials
 
