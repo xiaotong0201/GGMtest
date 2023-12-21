@@ -24,7 +24,7 @@ Rendered tutorials demonstrating the usage of the code are available at: [MC-GoF
 
 - Folder `Tutorials`: The corresponding R code used in the webpage tutorials.
   - [`MC-GoF_test_for_GGMs.Rmd`](https://tfq-acd.github.io/MC-GoF_test_for_GGMs/): Key steps involved in MC-GoF. 
-  - [`GoF_simulation.Rmd`](https://tfq-acd.github.io/GoFsimulation/): MC-GoF simulation example: take band graph for example to evaluate the statistical power and demonstrate the theoretically valid Type I error control of our MC-GoF test with numerical comparisons to established methods. [here]
+  - [`GoF_simulation.Rmd`](https://tfq-acd.github.io/GoFsimulation/): MC-GoF simulation example: take band graph for example to evaluate the statistical power and demonstrate the theoretically valid Type I error control of our MC-GoF test with numerical comparisons to established methods. 
   - [`Graphical_conditional_randomization_test.Rmd`](https://tfq-acd.github.io/CRT/): Key steps involved in G-CRT.  
   - [`G-CRT_simulation.Rmd`](https://tfq-acd.github.io/CRTsimulation/): G-CRT simulation example: take the linear regression model with a low-dimension setting for example to evaluate the statistical power of our proposed G-CRT.  
   - `CIT_function_for_webpage.R`: Utility functions for MC-GoF tutorials
