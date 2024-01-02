@@ -108,13 +108,13 @@ List_Stat_Comb_Logistic_HD=c(
 List_Stat_Comb_Binary=c(
   'Stat_Comb_RF_C_IS',                ## RF
   'Stat_Comb_RF_C_Distill_RF',        ## RF-D
-  'Stat_Comb_RF_R_Res_RF',            ## RF-RR
+  'Stat_Comb_RF_R_Res_RF'             ## RF-RR
   )
 
 List_Stat_Comb_Binary_HD=c(  
   'Stat_Comb_RF_C_IS',                ## RF
   'Stat_Comb_RF_C_Distill_RF',        ## RF-D
-  'Stat_Comb_RF_R_Res_RF',            ## RF-RR
+  'Stat_Comb_RF_R_Res_RF'             ## RF-RR
 ) 
 
 
