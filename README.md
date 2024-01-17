@@ -6,7 +6,7 @@ This repository contains source code for conducting hypothesis testing in Gaussi
 
 We define the p-dimensional GGM with respect to a given graph $G = (\mathcal{V},\mathcal{E})$ as follows:
 
-$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1})}$$ $$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}): \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \Omega_{i,j} = 0 \text{ if } i \neq j \text{ and } (i,j) \notin \mathcal{E} }$$
+$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}) : \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \Omega_{i,j} = 0}$$ $$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}): \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \Omega_{i,j} = 0 \text{ if } i \neq j \text{ and } (i,j) \notin \mathcal{E} }$$
 
 GoF testing is an indispensable part of statistical inference in GGMs. Suppose the rows of the observed data **X** are independent and identically distributed (i.i.d.) samples from some population $P$. Given a graph $G$, the GoF testing problem aims to test the null hypothesis that $$H_0: P \in \mathcal{M}_G$$
 
@@ -28,36 +28,15 @@ Our methodology is based on a combination of the conditional randomization test 
 
     -   `Example.Rmd`：Examples on implementation of our methods and the benchmark methods for GoF test and CRT test.
 
-    -   `GoF_simulations.R`：Contains the setups and instructions for generating data and implementation of GoF test in our simulation studies. The setups inlcude:
+    -   `GoF_simulations.R`：Contains the setups and instructions for generating data and implementation of GoF test in our simulation studies. The setups inlcude: 1. Type I error control. 2. Power comparison (band graphs, hub graphs and Erdös-Rényi random graphs). 3. Additional simulations on GoF tests for GGMs (consider an experimental setup in Verzelen and Villers [2009] for a balanced comparison with existing methods). 4. Additional simulations on GoF tests with prior information (using statistic functions PRC-w and ERC-w).
 
-        1.  Type I error control.
-        2.  Power comparison (band graphs, hub graphs and Erdös-Rényi random graphs).
-        3.  Additional simulations on GoF tests for GGMs (consider an experimental setup in Verzelen and Villers [2009] for a balanced comparison with existing methods).
-        4.  Additional simulations on GoF tests with prior information (using statistic functions PRC-w and ERC-w).
-
-    -   `CRT_simulations.R`：Contains the setups and instructions for generating data and implementation of CRT test in our simulation studies. The setups inlcude:
-
-        1.  Gaussian linear regression.
-        2.  Logistic regression.
-        3.  Nonlinear regression.
-        4.  Nonlinear binary regression.
+    -   `CRT_simulations.R`：Contains the setups and instructions for generating data and implementation of CRT test in our simulation studies. The setups inlcude: 1. Gaussian linear regression. 2. Logistic regression. 3. Nonlinear regression. 4. Nonlinear binary regression.
 
     -   `real_data_analysis.R`：Contains the following sections:
 
-        1.  Average Daily Precipitation in the United States.
-            -   Create graph.
-            -   Simulation Type-I Check.
-            -   Subsampling.
-        2.  Dependence of Fund Return.
-            -   Define X and Y.
-            -   Estimation by Glasso.
-            -   GoF Test.
-            -   Type I error check.
-            -   CIT Test.
-        3.  Breast Cancer Relapse.
-            -   Type I Error.
-            -   CIT Test.
-            -   Noise Experiments.
+        -   Average Daily Precipitation in the United States: 1. Create graph. 2. Simulation Type-I Check. 3. Subsampling.
+        -   Dependence of Fund Return: 1. Define X and Y. 2. Estimation by Glasso. 3. GoF Test. 4. Type I error check. 5. CIT Test.
+        -   Breast Cancer Relapse: 1. Type I Error. 2. CIT Test. 3. Noise Experiments.
 
 -   Folder `GGM-Test-Version0`: R code for two tests (MC-GoF and G-CRT)
 
