@@ -1,0 +1,302 @@
+---
+title: "Example"
+output: html_document
+date: "2024-01-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+```
+
+```{r}
+library(Matrix)
+library(MASS)
+library(mvtnorm)
+library(glasso)
+library(Rfast)
+library(glmnet)
+library(rags2ridges)
+library(dplyr)
+library(reshape)
+library(ggplot2)
+library(tables)
+library(reshape)
+library(plyr)
+library(dplyr)
+library(stringr)
+library(Matrix)
+library(MASS)
+library(mvtnorm)
+library(glasso)
+library(parallel)
+library(Rfast)
+library(glmnet)
+library(rags2ridges)
+library(tidyquant)
+source('Function.R')
+```
+
+## Goodness-of-Fit (GoF) Test
+
+1.Following the format guidelines outlined in the 'GGMtest/GGM-Test-Version0/Gof/Experiment.R' file for param_Band_template, param_Hub_template, and param_ER_template, adjust the parameters for various graphs accordingly.
+
+
+2. 'run_experiments_epo':Function to run one GoF test experiment. This run_experiments_epo function requires the following parameters:
+   - param_template: Model parameters.
+   - epo: Experiment number ( In the Type I error control experiment of GoF test: Maxepo=1200; in the Power comparison experiment of GoF test: Maxepo=400).
+   - M: Number of copies (set to 100 in the paper).
+   - L: Number of iterations (set to 3 in the paper).
+   - List_CSS_stat: List of statistic functions (NULL represents List_CSS_stat = c("PRC_SS", "PRC_SA", "PRC_Z_SS", "PRC_Z_SA", "ERC_SS", "ERC_SA", "ERC_Z_SS", "ERC_Z_SA", "F_max", "F_sum", "F_logsum", "F_Z_SA", "F_Z_SS", "glr_ridge", "glr_glasso") as defined in the paper).
+   - dir_prefix: Path to store files.
+   
+   In the 'run_experiments_epo' function, we need to invoke the 'GGM' function from the 'GoF-OneExp.R' file. This function is designed to conduct the GoF test and return the p-values obtained from both the specified test statistics and the baseline methods.
+   
+### Type I error control
+
+Take band graph $(K,K_0,p,s,n)=(6,6,20, 0.2, 80)$ for example
+
+```{r}
+# Parameters
+param_Band_template_typeI <- list(
+  model = "Band_Band",
+  N = 80,
+  P = 20,
+  modelParam = list(
+    K0 = 6,
+    K = 6,
+    s = 0.2
+  )
+)
+M = 100
+L = 3
+```
+
+Repeat the experiment 1200 times using the 'run_experiments_epo' function and save the results for each epoch.
+
+```{r}
+# Set the storage path
+path_prefix_TypeI=paste0('GoF_Experiments_typeI-','/')
+
+# Repeat experiments 1200 times and save results
+for (epo in 1:1200){
+  output_TypeI = run_experiments_epo(param_Band_template_typeI,epo, M,L,List_CSS_stat =NULL ,dir_prefix=path_prefix_TypeI)
+  save(output_TypeI,param_Band_template_typeI,file=paste0(path_prefix_TypeI,epo,'.RData'))
+}
+```
+
+### Power Comparison
+
+Take band graph $(K,K_0,p,s,n)=(6,1,20, 0.2, 80)$ for example
+
+```{r}
+# Parameters
+param_Band_template_power <- list(
+  model = "Band_Band",
+  N = 80,
+  P = 20,
+  modelParam = list(
+    K0 = 1,
+    K = 6,
+    s = 0.2
+  )
+)
+M = 100
+L = 3
+
+```
+
+Repeat the experiment 400 times using the 'run_experiments_epo' function and save the results for each epoch.
+
+```{r}
+# Set the storage path
+path_prefix_power=paste0('GoF_Experiments_power-','/')
+
+# repeat experiment 400 times and save the result
+for (epo in 1:400){
+  output_power = run_experiments_epo(param_Band_template_power,epo, M,L,List_CSS_stat =NULL ,dir_prefix=path_prefix_power)
+  save(output_power,param_Band_template_power,file=paste0(path_prefix_power,epo,'.RData'))
+}
+
+```
+
+3. Analyze the results.
+
+Load the results in step 2.
+
+   'read_experiments_epo': Function to get the summary of results:
+   - param_template: Model parameters.
+   - output_list: Experiment results of the 1200 GoF tests.
+   - sig.lv: significance level (0.05).   
+   
+   'extract_metric': Function to return power, standard error and the p-value of the one-sample proportion test.
+   - metric_name: 'ospt': return the p-value of the one-sample proportion test; 'power':return power; 'SE': return the standard error.
+   - sig.lv: significance level (0.05).  
+
+
+### Type I error control
+
+```{r}
+# Load results
+all_output_typeI=list()
+for(epo in 1:1200){
+  load(file=paste0('GoF_Experiments_typeI-','/',epo,'.RData'))
+  all_output_typeI[[epo]]=output_TypeI
+}
+
+# calculate the rejection proportions and conduct the one-sample proportion test for the hypothesis that the rejection probability is no greater than alpha = 0.05.
+# utilize four test statistic functions (PRC, ERC, F_Sigma, GLR-l1) and take M1P1 and Bonf as baseline methods.
+
+summ=read_experiments_epo(param_Band_template_typeI,all_output_typeI)
+#Rejection proportion
+rej.table=extract_metric(metric_name='power')[c(1:8,14,17,22)]
+colnames(rej.table) = c("n","p","K0","K","s","VV","DP","PRC","ERC","F_Sigma","GLR_l1")
+#One-sided p-value of the one-sample proportion test
+ospt.table=extract_metric(metric_name='ospt')[c(1:8,14,17,22)]
+colnames(ospt.table) = c("n","p","K0","K","s","VV","DP","PRC","ERC","F_Sigma","GLR_l1")
+
+```
+
+### Power Comparison 
+
+```{r}
+#load the result
+all_output_power=list()
+for(epo in 1:400){
+  load(file=paste0('GoF_Experiments_power-','/',epo,'.RData'))
+  all_output_power[[epo]]=output_power
+}
+
+# Calculate the power and standard error
+## utilize four test statistic functions (PRC, ERC, F_Sigma, GLR-l1) and take M1P1 and Bonf as baseline methods.
+
+summ=read_experiments_epo(param_Band_template_power,all_output_power)
+#Power
+power.table=extract_metric(metric_name='power')[c(1:8,14,17,22)]
+colnames(power.table) = c("n","p","K0","K","s","VV","DP","PRC","ERC","F_sum","GLR_lasso")
+#Standard error
+SE.table=extract_metric(metric_name='SE')[c(1:8,14,17,22)]
+colnames(SE.table) = c("n","p","K0","K","s","VV","DP","PRC","ERC","F_sum","GLR_lasso")
+
+```
+
+   
+## Conditional Randomization Test (CRT)
+
+1. Following the format guidelines outlined in the 'GGMtest/GGM-Test-Version0/CRT/Experiment.R' file for popul_param_llw, popul_param_hlw, popul_param_lgw, popul_param_hgw, popul_param_llm, popul_param_hlm, popul_param_lgm and popul_param_hgm, adjust the parameters for various models accordingly.
+
+
+2. ‘CRT': Function to simulate data, obtain statistic functions, conduct graphical conditional randomization test (G-CRT) and output the p-values for each test statistic function at different values of theta.
+   - popul_param: Model parameters.
+   - CSS_param: Parameters for algorithm 2 (M: Number of copies=100; L: Number of iterations=3).
+   - epo: Experiment number (400 experiments are conducted for each CRT test in the paper).
+   - CSS_sample: Exchangeable copies for the GGM (If CSS_sample=NULL, the 'exchangeable_sampling' function will generate exchangeable copies).
+   - dir_prefix: Path to store files.
+   
+   In the 'CRT' function, we utilize 'GetStatComb' function and 'Run_all_test' function from 'GGMtest/GGM-Test-Version0/CRT/Run-Testing.R' file.
+   'GetStatComb': Obtain the statistic function employed by each model as described in the paper.
+   'Run_all_test': Conduct graphical conditional randomization test (G-CRT) and return the p-values for each test statistic function and baseline methods.
+  
+Employ a linear regression model with a low-dimension setting (p=20 and n=50)
+
+```{r}
+# Set parameters
+popul_param_llw <- list(
+  setting = "l_l_w",
+  N = c(50),
+  P = c(20),
+  setT=1:8, 
+  modelParam = list(
+    K = 6,
+    s = 0.2,
+    grid_signal= seq(0,2.5,by=0.25)
+  )
+)
+
+```
+   
+   Repeat the experiment400 times using the 'CRT' function and save the results for each epoch.
+  
+```{r}
+# Set the storage path
+path_prefix_llw=paste0('Experiments-llw','/')
+
+# Repeat experiment and save results
+for (epo in 1:400){
+  output_llw = CRT(popul_param_llw,epo = epo)
+  save(output_llw,popul_param_llw,file=paste0(path_prefix_llw,epo,'.RData'))
+}
+```
+   
+3. Analyze the results.
+Load the results in step 2. We extract the power and standard error values from the results and create power plots for various statistic functions in each setting as described in the paper.
+
+
+```{r}
+# Load results
+all_output_llw=list()
+for(epo in 1:400){
+  load(file=paste0(path_prefix_llw,epo,'.RData'))
+  all_output_llw[[epo]]=output_llw
+}
+
+combined_pvalues=list()
+for(ind.signal in 1:length(popul_param_llw$modelParam$grid_signal)){
+  combined_pvalues[[ind.signal]]=t(sapply(all_output_llw, function(v)v[[ind.signal]]$pvalues))
+}
+combined_pvalues=lapply(combined_pvalues,function(x)x[,-c(5)])
+combined_pvalues=lapply(combined_pvalues,function(x){
+  colnames(x)=c("LM-SST","LM-SSR","F-test","dCRT")
+  return(x)})
+
+#Present the power curve of various testing methods in the experiment, in which power is plotted against varying values of theta
+
+Fun_SE=function(x){sd(x)/sqrt(length(x))}
+
+pvalues_array=simplify2array(combined_pvalues)
+sig.lv=0.05
+
+power_table=data.frame(apply(pvalues_array<sig.lv, 3:2,mean)); 
+power_SE_table=data.frame(apply(pvalues_array<sig.lv, 3:2,Fun_SE))
+
+num_methods=ncol(power_table)
+power_table$theta=popul_param_llw$modelParam$grid_signal
+power_SE_table$theta=popul_param_llw$modelParam$grid_signal
+
+df_melt=melt(power_table,id.vars="theta", variable_name = "Test")
+df_melt$Power=df_melt$value;df_melt$value=NULL
+
+SE_melt <- melt(power_SE_table, id.vars = "theta", variable_name = "Test")
+SE_melt$SE=SE_melt$value;SE_melt$value=NULL
+
+# Merge the data and SE data frames
+merged_df <- merge(df_melt, SE_melt, by = c("theta", "Test"))
+
+```
+
+Create the power plot
+
+```{r}
+Select_Methods=c()
+Select_Theta=c()
+
+distinct_colors <- scales::hue_pal()(num_methods)
+distinct_linetypes <- rep(c("solid", "dashed", "dotted", "twodash", "longdash", "dotdash"), length.out = num_methods)
+distinct_shapes <- rep( c(1,2,3,4,5,6,8,15,16,17,18), length.out= num_methods)
+
+ggplot(merged_df, aes(x = theta, y = Power, color = Test, shape=Test, linetype = Test)) +
+  geom_point() +
+  geom_line(size = 0.6) +
+  geom_errorbar(aes(ymin=Power-SE, ymax=Power+SE), width=0.1) +
+  # geom_ribbon(aes(ymin = Power - SE, ymax = Power + SE, fill = Test), alpha = 0.2) +
+  theme(legend.position = "right") +
+  theme_bw() + 
+  geom_hline(yintercept=0.05, linetype="dotted", color = "black") +
+  annotate("text", x = max(merged_df$theta), y = 0.05, label = "Level", vjust = -1) +
+  labs( #title = "Power Curve",
+    x = expression(theta),
+    y = "Power")  +
+  scale_color_manual(values = distinct_colors) +
+  scale_shape_manual(values = distinct_shapes)+
+  scale_fill_manual(values = distinct_colors) 
+```
+
