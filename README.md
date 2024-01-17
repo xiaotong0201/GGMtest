@@ -6,8 +6,8 @@ This repository contains source code for conducting hypothesis testing in Gaussi
 
 We define the p-dimensional GGM with respect to a given graph $G = (\mathcal{V},\mathcal{E})$ as follows:
 
-$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}) : \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0}$$ 
-$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}): \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \Omega_{i,j} = 0 \text{ if } i \neq j \text{ and } (i,j) \notin \mathcal{E} }$$
+$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}) : \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \boldsymbol{\Omega}_{i,j}}$$ 
+$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}): \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \boldsymbol{\Omega}_{i,j} = 0 \text{ if } i \neq j \text{ and } (i,j) \notin \mathcal{E} }$$
 
 GoF testing is an indispensable part of statistical inference in GGMs. Suppose the rows of the observed data **X** are independent and identically distributed (i.i.d.) samples from some population $P$. Given a graph $G$, the GoF testing problem aims to test the null hypothesis that $$H_0: P \in \mathcal{M}_G$$
 
