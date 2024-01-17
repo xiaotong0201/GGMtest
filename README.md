@@ -4,7 +4,9 @@ This repository contains source code for conducting hypothesis testing in Gaussi
 
 ## Goodness-of-Fit (GoF) Tests
 
-We define the p-dimensional GGM with respect to a given graph $G = (\mathcal{V},\mathcal{E})$ as follows: $$\mathcal{M}_G = \{ \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}): \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \Omega_{i,j} = 0 \text{ if } i \neq j \text{ and } (i,j) \notin \mathcal{E} \}$$
+We define the p-dimensional GGM with respect to a given graph $G = (\mathcal{V},\mathcal{E})$ as follows: 
+
+$$\mathcal{M}_G = { \mathbf{N}_p(\boldsymbol{\mu}, \boldsymbol{\Omega}^{-1}): \boldsymbol{\mu} \in \mathbb{R}^p, \boldsymbol{\Omega} > 0, \Omega_{i,j} = 0 \text{ if } i \neq j \text{ and } (i,j) \notin \mathcal{E} }$$
 
 GoF testing is an indispensable part of statistical inference in GGMs. Suppose the rows of the observed data **X** are independent and identically distributed (i.i.d.) samples from some population $P$. Given a graph $G$, the GoF testing problem aims to test the null hypothesis that $$H_0: P \in \mathcal{M}_G$$
 
@@ -14,7 +16,7 @@ We sample exchangeable copies to construct goodness-of-fit tests for Gaussian gr
 
 Conditional independence test is to test the null hypothesis that the response $Y$ is conditionally independent of the covariate variables $X_\mathcal{T}$ given the other covariate variables $X_\mathcal{S}$, where $X_\mathcal{T}$ and $X_\mathcal{S}$ are the sub-vectors of $X$ corresponding to $\mathcal{T}$ and $\mathcal{S}$, respectively. The null hypothesis can be expressed mathematically as:
 
-$$Y \indep X_\mathcal{T} | X_\mathcal{S}$$
+$$Y \bot X_\mathcal{T} | X_\mathcal{S}$$
 
 Our methodology is based on a combination of the conditional randomization test (CRT) and our algorithm for generating exchangeable copies. Notably, our method imposes less stringent conditions on the distribution of X among existing CRT methods. We discuss different strategies for constructing test statistic functions and demonstrate in simulations that our approach could be much more powerful than alternatives when the sub-vector of X contains many elements.
 
