@@ -53,18 +53,32 @@ source('Function.R')
    
 ### Type I error control
 
+**Band Graph**: The precision matrix $\boldsymbol{\Omega}$ satisfies that for $i,j \in \left\{ 1, \cdots, p \right\}$:
+$$ \omega_{i, j}=\left\{
+\begin{array}{rcl}
+1       &      & \text{if}\quad i=j, \\
+s     &      & \text{if}\quad 1\leq |i-j|\leq K \quad\text{and}\quad i\neq j,\\
+0       &      & \text{if}\quad |i-j|> K \quad\text{and}\quad  i\neq j,
+\end{array} \right. $$
+
+where $K$ is the bandwidth and $s\in (0,0.2)$ is the signal magnitude.
+
 Take band graph $(K,K_0,p,s,n)=(6,6,20, 0.2, 80)$ for example
+
+True distribution: band graph $G$ with $K =6$ and $s=0.2$. 
+Null hypothesis: band graph $G_0$ with $K_0=6$ (the null hypothesis is true in this case).
+$p$ is the dimension and $n$ is the sample size.
 
 ```{r}
 # Parameters
 param_Band_template_typeI <- list(
   model = "Band_Band",
-  N = 80,
-  P = 20,
+  N = 80,              # sample size
+  P = 20,              # number of dimensions
   modelParam = list(
-    K0 = 6,
-    K = 6,
-    s = 0.2
+    K0 = 6,            # bandwidth of null graph
+    K = 6,             # bandwidth of true graph
+    s = 0.2            # signal magnitude   
   )
 )
 M = 100
@@ -92,12 +106,12 @@ Take band graph $(K,K_0,p,s,n)=(6,1,20, 0.2, 80)$ for example
 # Parameters
 param_Band_template_power <- list(
   model = "Band_Band",
-  N = 80,
-  P = 20,
+  N = 80,               # sample size
+  P = 20,               # number of dimensions
   modelParam = list(
-    K0 = 1,
-    K = 6,
-    s = 0.2
+    K0 = 1,             # bandwidth of null graph
+    K = 6,              # bandwidth of true graph
+    s = 0.2             # signal magnitude   
   )
 )
 M = 100
@@ -201,14 +215,14 @@ Employ a linear regression model with a low-dimension setting (p=20 and n=50)
 ```{r}
 # Set parameters
 popul_param_llw <- list(
-  setting = "l_l_w",
-  N = c(50),
-  P = c(20),
-  setT=1:8, 
+  setting = "l_l_w",            # gaussian linear regression
+  N = c(50),                    # sample size
+  P = c(20),                    # number of dimensions      
+  setT=1:8,                     # a set of indices for the covariates
   modelParam = list(
-    K = 6,
-    s = 0.2,
-    grid_signal= seq(0,2.5,by=0.25)
+    K = 6,                      # bandwidth of true graph
+    s = 0.2,                    # signal magnitude 
+    grid_signal= seq(0,2.5,by=0.25) # the constant factor used to control  the magnitude of the dependence of Y on X
   )
 )
 
