@@ -25,11 +25,14 @@ rotate = function(x, i, graph) {
   vec.1 = matrix(1, nr=n, nc=1)
   new.xi = x[, i]
   sample.mean = mean(x[, i])
-  if(length(neighbors) == 0) {
+  
+  
+  l=length(neighbors)
+  if(l == 0) {
     # If no neighbors, rotate based on the sample mean
     new.xi = sample.mean + ortho.vec(vec.1) * sqrt(sum((x[, i] - sample.mean)^2))
-  } else {
-    
+  } else if(n >=  2+l){
+
     lr.temp = lm(x[, i]~ x[, neighbors] )
     new.xi = lr.temp$fitted.values +  sqrt(sum(lr.temp$residuals^2)) * ortho.vec(cbind(vec.1, x[, neighbors])) 
    
@@ -128,18 +131,26 @@ ComputePValue <- function(T0, Ttilde, type =  "One-sided", #c('One-sided', 'Two-
 ## Residual correlation based methods 
 
 # Helper function to get residuals
+# Assume x has been de-mean
 get_residuals <- function(x,i, neighbors) {
-  if (length(neighbors) == 0) {
+  l=length(neighbors) 
+  n=nrow(x)
+  if (l== 0) {
     return(x[,i])
-  } else {
+  }else if(1+l>= n){
+    return( x[,i]*0 )
+  }else {
     model = lmfit(x[, neighbors], x[,i])
     return(model$residuals)
   }
 }
 
+# Assume intercept is needed
 get_residuals_intercept <- function(x,i, neighbors) {
   if (length(neighbors) == 0) {
     return(x[,i] - mean(x[,i]))
+  }else if(length(neighbors)+1>n){
+    return( x[,i]*0 )
   } else {
     model = lmfit(cbind(1,x[, neighbors]), x[,i])
     return(model$residuals)
@@ -163,100 +174,45 @@ PRC_pvalues <- function(x, graph){
   pv.stab = matrix(1, nrow = p, ncol = p)
   
   
-  if( 2*max(colSums(graph)) + 3 > n){
-    PRC_pvalues <- function(x, graph){
   
-  p = ncol(x)
-  n = nrow(x)
+  x=scale(x,center=T,scale=F)   # de-mean to avoid cbind when getting residual
   
-  pv.exact = matrix(1, nrow = p, ncol = p)
-  pv.stab = matrix(1, nrow = p, ncol = p)
+  # Find neighbors for each variable based on the adjacency graph
+  neig_list = lapply(1:p, function(i) setdiff(which(graph[i, ] != 0), i))
   
-  
-  if( 2*max(colSums(graph)) + 3 > n){
-    ## print('Null graph too large for PRC!')
-  }else{
-    
-    # de-mean to avoid cbind when getting residual
-    x=scale(x,center=T,scale=F)   
-    
-    # Find neighbors for each variable based on the adjacency graph
-    neig_list = lapply(1:p, function(i) setdiff(which(graph[i, ] != 0), i))
-    
-    # Loop over all pairs of variables
-    for (i in 1:(p-1)){
-      for (j in (i+1):p){
-        if (graph[i, j] == 0){  # if i and j are not adjacent
-          
-          # Find the union of neighbors for i and j
-          neig = union(neig_list[[i]], neig_list[[j]])
+  # Loop over all pairs of variables
+  for (i in 1:(p-1)){
+    for (j in (i+1):p){
+      if (graph[i, j] == 0){  # if i and j are not adjacent
+        
+        # Find the union of neighbors for i and j
+        neig = union(neig_list[[i]], neig_list[[j]])
+        df = n - length(neig) - 2
+        
+        if(df>= 1){
           # Calculate residuals
           res_i = get_residuals(x, i, neig)
           res_j = get_residuals(x, j, neig)
           
           # Compute residual correlation and test statistics
           res_cor = cor(res_i,res_j)
-          df = n - length(neig) - 2
+          
           
           # Compute p-value 
           t_stat = sqrt(df) * res_cor / sqrt(1 - res_cor^2)
           pv.exact[i, j] = 2 * pt(abs(t_stat), df, lower.tail=FALSE)
           pv.stab[i,j]=pvalue_stablizing_cor(res_cor,df)
-          
-        }else {
-          pv.exact[i, j] = pv.stab[i,j] = 1
         }
-        # Store symmetric values
-        pv.exact[j, i] = pv.exact[i, j]
-        pv.stab[j, i] = pv.stab[i, j] 
+        
         
       }
+      # Store symmetric values
+      pv.exact[j, i] = pv.exact[i, j]
+      pv.stab[j, i] = pv.stab[i, j] 
+      
     }
   }
   
-  return(list(pv.exact=pv.exact,pv.stab=pv.stab))   
-}
-
-  }else{
-    
-    
-    x=scale(x,center=T,scale=F)   # de-mean to avoid cbind when getting residual
-    
-    # Find neighbors for each variable based on the adjacency graph
-    neig_list = lapply(1:p, function(i) setdiff(which(graph[i, ] != 0), i))
-    
-    # Loop over all pairs of variables
-    for (i in 1:(p-1)){
-      for (j in (i+1):p){
-        if (graph[i, j] == 0){  # if i and j are not adjacent
-          
-          # Find the union of neighbors for i and j
-          neig = union(neig_list[[i]], neig_list[[j]])
-          # Calculate residuals
-          res_i = get_residuals(x, i, neig)
-          res_j = get_residuals(x, j, neig)
-          
-          # Compute residual correlation and test statistics
-          res_cor = cor(res_i,res_j)
-          df = n - length(neig) - 2
-          
-          # Compute p-value 
-          t_stat = sqrt(df) * res_cor / sqrt(1 - res_cor^2)
-          pv.exact[i, j] = 2 * pt(abs(t_stat), df, lower.tail=FALSE)
-          pv.stab[i,j]=pvalue_stablizing_cor(res_cor,df)
-          
-          
-          
-        }else {
-          pv.exact[i, j] = pv.stab[i,j] = 1
-        }
-        # Store symmetric values
-        pv.exact[j, i] = pv.exact[i, j]
-        pv.stab[j, i] = pv.stab[i, j] 
-        
-      }
-    }
-  }
   
   return(list(pv.exact=pv.exact,pv.stab=pv.stab))   
 }
@@ -269,51 +225,45 @@ ERC_pvalues <- function(x, graph){
   pv.exact = matrix(1, nrow = p, ncol = p)
   pv.stab = matrix(1, nrow = p, ncol = p)
   
+  x=scale(x,center=T,scale=F)   # de-mean to avoid cbind when getting residual
   
   
-  if( max(colSums(graph)) + 3 > n){
-    ## print('Null graph too large for ERC!')
-  }else{
-    
-    x=scale(x,center=T,scale=F)   # de-mean to avoid cbind when getting residual
-    
-    
-    # Create a list to store neighbors for each variable
-    residual = matrix(NA,nr=n,nc=p)
-    size_neig=c()
-    
-    # Do linear regression on neighbors for each variable based on the adjacency graph
-    for (i in 1:p){
-      i_neig = setdiff(which(graph[i,] != 0), i)
-      residual[,i]=get_residuals(x, i,i_neig)
-      size_neig[i]=length(i_neig)
-    }
-    
-    # Loop over all pairs of variables
-    for (i in 1:(p-1)){
-      for (j in (i+1):p){
-        if (graph[i, j] == 0){  # if i and j are not adjacent
-          
-          # Compute residual correlation and test statistics
-          res_i = residual[,i]
-          res_j = residual[,j]
+  # Create a list to store neighbors for each variable
+  residual = matrix(NA,nr=n,nc=p)
+  size_neig=c()
+  
+  # Do linear regression on neighbors for each variable based on the adjacency graph
+  for (i in 1:p){
+    i_neig = setdiff(which(graph[i,] != 0), i)
+    residual[,i]=get_residuals(x, i,i_neig)
+    size_neig[i]=length(i_neig)
+  }
+  
+  # Loop over all pairs of variables
+  for (i in 1:(p-1)){
+    for (j in (i+1):p){
+      if (graph[i, j] == 0){  # if i and j are not adjacent
+        
+        # Compute residual correlation and test statistics
+        res_i = residual[,i]
+        res_j = residual[,j]
+        
+        
+        df=n-2-min(size_neig[i],size_neig[j])
+        if(df>=1){
           
           res_cor = cor(res_i,res_j)
-          df=n-2-min(size_neig[i],size_neig[j])
-          
           pv.exact[i, j] = pbeta(abs(res_cor),shape1=1,shape2=df,lower.tail = F)
           pv.stab[i, j] = pvalue_stablizing_cor(res_cor,df)
-          
-          
-        } else {
-          pv.exact[i, j] = pv.stab[i,j] = 1
         }
-        # Store symmetric values
-        pv.exact[j, i] = pv.exact[i, j]
-        pv.stab[j, i] = pv.stab[i, j] 
-      }
+        
+      } 
+      # Store symmetric values
+      pv.exact[j, i] = pv.exact[i, j]
+      pv.stab[j, i] = pv.stab[i, j] 
     }
   }
+  
   return(list(pv.exact=pv.exact,pv.stab=pv.stab))   
 }
 
@@ -446,23 +396,19 @@ local_regression_Fvalue <- function(x, graph){
   
   
   
-  if( max(colSums(graph)) + 3 > n){
+  
+  # Find neighbors for each variable based on the adjacency graph
+  neig_list = lapply(1:p, function(i) setdiff(which(graph[i, ] != 0), i))
+  
+  
+  x=scale(x,center=T,scale=F)   # de-mean to avoid cbind when getting residual
+  
+  # Loop over all pairs of variables
+  for (i in 1:p){
+    neig_i=neig_list[[i]]
+    di=length(neig_i)
     
-    ## print('Null graph too large for local regression!')
-  }else{
-    
-    # Find neighbors for each variable based on the adjacency graph
-    neig_list = lapply(1:p, function(i) setdiff(which(graph[i, ] != 0), i))
-    
-    
-    x=scale(x,center=T,scale=F)   # de-mean to avoid cbind when getting residual
-    
-    # Loop over all pairs of variables
-    for (i in 1:p){
-      neig_i=neig_list[[i]]
-      di=length(neig_i)
-      
-      
+    if(n >= 3+di){
       residual_null=get_residuals(x,i,neig_i)
       
       set_M1=setdiff(1:p,c(i,neig_i))
@@ -479,43 +425,6 @@ local_regression_Fvalue <- function(x, graph){
         # Store the F-test result
         Fvalue[i, j] = numerator/denominator
         pvalue[i, j] = pf(Fvalue[i, j],df1 = 1,df2 = n-1-1-di,lower.tail = F)
-      }
-    }
-    return(list(Fvalue=Fvalue,pvalue=pvalue))   
-  }
-  
-  local_regression_Fvalue_lmfunction <- function(x, graph){
-    p = ncol(x)
-    n = nrow(x)
-    Fvalue = matrix(-1, nrow = p, ncol = p)  # Initialize
-    pvalue = matrix(2, nrow = p, ncol = p)
-    
-    # Find neighbors for each variable based on the adjacency graph
-    neig_list = lapply(1:p, function(i) setdiff(which(graph[i, ] != 0), i))
-    
-    # Loop over all pairs of variables
-    for (i in 1:p){
-      neig_i=neig_list[[i]]
-      
-      if(length(neig_i)>0){
-        model_NE <- lm(x[, i] ~ x[, neig_i])
-      }else{
-        model_NE <- lm(x[, i] ~ 1)
-      }
-      
-      set_M1=setdiff(1:p,c(i,neig_i))
-      
-      for (j in set_M1){
-        
-        # Fit the regression model for X_i onto the larger model
-        model_larger <- lm(x[, i] ~ x[, c(neig_i, j)])
-        
-        # Perform the F-test to compare the models
-        f_test_result <- anova(model_NE, model_larger)
-        
-        # Store the F-test result
-        Fvalue[i, j] = f_test_result$F[2]
-        pvalue[i, j] = f_test_result$`Pr(>F)`[2]
       }
     }
   }
@@ -596,16 +505,23 @@ All_Stat_F=function(x, graph,threshold=0.1){
 # N. Verzelen and F. Villers 2009
 VV_GoF=function(x,graph){
   
+  
+  
   Fp_stat=local_regression_Fvalue(x,graph)
   pvalues=Fp_stat$pvalue
   
   p=ncol(x)
-  bonf_pvalues=c()
+  num_fullnode=0  # Ignore nodes that have full connections
+  bonf_pvalues=rep(1,p)
   for(i in 1:p){
     m_i=sum(graph[i,-i]==0)
-    bonf_pvalues[i]=m_i*min(pvalues[i,])
+    if(m_i>0){
+      bonf_pvalues[i]=m_i*min(pvalues[i,])
+    }else{
+      num_fullnode=num_fullnode+1
+    }
   }
-  return(min(bonf_pvalues*p,1))
+  return(min(bonf_pvalues*(p-num_fullnode),1))
 }
 
 ## Likelihood ratio test
