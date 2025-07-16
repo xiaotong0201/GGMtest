@@ -1,5 +1,7 @@
-## Graphical conditional randomization test (G-CRT)
-## Output the p-values for each statistic at different values of theta.
+
+
+
+
 
 CRT =function(popul_param,
               CSS_param=list(M=100,L=3),
@@ -19,7 +21,7 @@ CRT =function(popul_param,
   
   print(paste(n,p,setting,sep=","))
   path_prefix=paste0(dir_prefix,'DataStorage-',format(Sys.time(), "%b-%e-%Y"),'/')
-  # Create the folder if the folder not exist
+  #     # Create the folder if the folder not exist
   if (!file.exists(path_prefix)) {
     dir.create(path_prefix)
   }
@@ -28,36 +30,31 @@ CRT =function(popul_param,
   
   file_prefix=paste0(path_prefix,file_prefix,collapse ="_")
 
+  
+  
+  
   true_graph=graph_band(p,modelparam$K,modelparam$s)
-
+  
+  
   set.seed(epo) 
-  perm.var=sample(p,p)
-  sigma=true_graph$sigma[perm.var,perm.var]
-  inv.sigma=true_graph$inv.sigma[perm.var,perm.var]
-  
-  diag_s=sqrt(diag(sigma))
-  sigma=sweep(sweep(sigma,1,1/diag_s,"*"),2,1/diag_s, "*")
-  inv.sigma=sweep(sweep(inv.sigma,1,diag_s,"*"),2,diag_s, "*")
-  
-  G = prec_to_adj(inv.sigma)
-  
-  if(min(eigen(inv.sigma)$values)<0){
-    print('Model Error!')
-    return(NULL)
-  }
-  if( 2*max(colSums(G)) + 3 > n){
-    print('True graph too large!')
-    return(NULL)
-  }
-  
   
   
   # Simulate the data
-  x <- simulate_data(sigma, n)
-
+  x <- simulate_data_t(n,p)
+  
+  perm.var=sample(p,p)
+  x=x[,perm.var]
+  sigma=true_graph$sigma[perm.var,perm.var]
+  inv.sigma=true_graph$inv.sigma[perm.var,perm.var]
+  
+  G = prec_to_adj(inv.sigma)
+  
+  
+  # saveRDS(x, file = paste0(file_prefix,"_n=",n,"_p=",p,"_x_epo=",epo,".rds") )
   beta=random_beta(p)
   noise_unif=runif(n)
-
+  
+  
   ### CSS sampling
   if(is.null(CSS_sample)){
     
