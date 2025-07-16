@@ -68,5 +68,5 @@ Rendered tutorials demonstrating the usage of the code are available at: [MC-GoF
 
 ## Reference Paper:
 
-Xiaotong Lin, Weihao Li, Fangqiao Tian and Dongming Huang. *Goodness-of-fit tests for high-dimensional Gaussian graphical models via exchangeable sampling.* Journal of the Royal Statistical Society Series B: Statistical Methodology, qkaf032. URL: <https://doi.org/10.1093/jrsssb/qkaf032>.
-Xiaotong Lin, Jie Xie, Fangqiao Tian and Dongming Huang. *Testing Multivariate Conditional Independence Using Exchangeable Sampling and Sufficient Statistics* Journal of the Royal Statistical Society Series B, under review. URL: <https://arxiv.org/abs/2504.06685>.
+-   Xiaotong Lin, Weihao Li, Fangqiao Tian and Dongming Huang. *Goodness-of-fit tests for high-dimensional Gaussian graphical models via exchangeable sampling.* Journal of the Royal Statistical Society Series B: Statistical Methodology, qkaf032. URL: <https://doi.org/10.1093/jrsssb/qkaf032>.
+-   Xiaotong Lin, Jie Xie, Fangqiao Tian and Dongming Huang. *Testing Multivariate Conditional Independence Using Exchangeable Sampling and Sufficient Statistics* Journal of the Royal Statistical Society Series B, under review. URL: <https://arxiv.org/abs/2504.06685>.
