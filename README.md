@@ -44,7 +44,18 @@ Our methodology is based on a combination of the conditional randomization test 
         -   `US`: Average daily precipitation in the United States
         -   `Stock`: Dependence of fund return
         -   `Breast`: Breast cancer relapse
+        
+-   Folder `GoF-Additional-Test`: R code for additional simulations of GoF
 
+    -   `Selection_of_L`：Examining the effect of the parameter $L$ in the algorithm *Sampling Exchangeable Copies for a GGM*.
+    -   `More_Complicated_Graph_Structures`: Exploring more complicated graph structures.
+    
+-   Folder `CRT-Additional-Test`: R code for additional simulations of CRT
+ 
+    -   `CRT-Oversized`: Studying the power when a moderately oversized supergraph is used in the G-CRT
+    -   `CRT-Univariate`: Examing the case where $X_\mathcal{T}$ is univariate.
+    -   `CRT-UniformT`: Studying the performance under violations of the Gaussian assumption.
+    
 Rendered tutorials demonstrating the usage of the code are available at: [MC-GoF_test_for_GGMs](https://tfq-acd.github.io/MC-GoF_test_for_GGMs/), [GoF_simulation](https://tfq-acd.github.io/GoFsimulation/), [Graphical_conditional_randomization_test](https://tfq-acd.github.io/CRT/), [G-CRT_simulation](https://tfq-acd.github.io/CRTsimulation/).
 
 -   Folder `Tutorials`: The corresponding R code used in the webpage tutorials.
@@ -57,4 +68,5 @@ Rendered tutorials demonstrating the usage of the code are available at: [MC-GoF
 
 ## Reference Paper:
 
-Xiaotong Lin, Fangqiao Tian and Dongming Huang. *Hypothesis Testing in Gaussian Graphical Models: Novel Goodness-of-Fit Tests and Conditional Randomization Tests.* 4 december 2023. DOI: 10.48550/arXiv.2312.01815. arXiv: 2312.01815[stat]. URL: <http://arxiv.org/abs/2312.01815>.
+Xiaotong Lin, Weihao Li, Fangqiao Tian and Dongming Huang. *Goodness-of-fit tests for high-dimensional Gaussian graphical models via exchangeable sampling.* Journal of the Royal Statistical Society Series B: Statistical Methodology, qkaf032. URL: <https://doi.org/10.1093/jrsssb/qkaf032>.
+Xiaotong Lin, Jie Xie, Fangqiao Tian and Dongming Huang. *Testing Multivariate Conditional Independence Using Exchangeable Sampling and Sufficient Statistics* Journal of the Royal Statistical Society Series B, under review. URL: <https://arxiv.org/abs/2504.06685>.
