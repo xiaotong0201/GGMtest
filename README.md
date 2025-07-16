@@ -53,7 +53,7 @@ Our methodology is based on a combination of the conditional randomization test 
 -   Folder `CRT-Additional-Test`: R code for additional simulations of CRT
  
     -   `CRT-Oversized`: Studying the power when a moderately oversized supergraph is used in the G-CRT
-    -   `CRT-Univariate`: Examing the case where $X_\mathcal{T}$ is univariate.
+    -   `CRT-Univariate`: Examining the case where $X_\mathcal{T}$ is univariate.
     -   `CRT-UniformT`: Studying the performance under violations of the Gaussian assumption.
     
 Rendered tutorials demonstrating the usage of the code are available at: [MC-GoF_test_for_GGMs](https://tfq-acd.github.io/MC-GoF_test_for_GGMs/), [GoF_simulation](https://tfq-acd.github.io/GoFsimulation/), [Graphical_conditional_randomization_test](https://tfq-acd.github.io/CRT/), [G-CRT_simulation](https://tfq-acd.github.io/CRTsimulation/).
