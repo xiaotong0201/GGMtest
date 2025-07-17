@@ -2,8 +2,9 @@
 
 This repository contains source code for conducting hypothesis testing in Gaussian graphical models, including a Monte Carlo goodness-of-fit ([MC-GoF](https://arxiv.org/abs/2312.01815)) test and graphical conditional randomization test ([G-CRT](https://arxiv.org/abs/2504.06685)) introduced by the following papers:
 
-Xiaotong Lin, Weihao Li, Fangqiao Tian and Dongming Huang. (2025). Goodness-of-Fit Tests via Co-sufficient Sampling. Journal of the Royal Statistical Society Series B, qkaf032.
- 
+[Xiaotong Lin, Weihao Li, Fangqiao Tian and Dongming Huang. (2025). Goodness-of-Fit Tests via Co-sufficient Sampling. Journal of the Royal Statistical Society Series B, qkaf032.](https://doi.org/10.1093/jrsssb/qkaf032)
+
+Xiaotong Lin, Jie Xie, Fangqiao Tian and Dongming Huang. (2025). Testing Multivariate Conditional Independence Using Exchangeable Sampling and Sufficient Statistics. Journal of the Royal Statistical Society Series B, under review.
 
 ## Goodness-of-Fit (GoF) Tests
 
